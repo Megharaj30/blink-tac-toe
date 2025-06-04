@@ -92,15 +92,3 @@ Vercel Team
 
 Emoji Creators 😄
 
-yaml
-Copy code
-
----
-
-> You can create a new file in your root directory named `README.md` and paste this content into it.  
-> After that, commit and push it:
-
-```bash
-git add README.md
-git commit -m "Add project README"
-git push origin main
