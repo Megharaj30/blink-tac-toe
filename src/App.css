@@ -1,186 +1,329 @@
-/* src/App.css */
-.game-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background: linear-gradient(145deg, #f2f2f2, #e0e0e0);
-  font-family: 'Arial', sans-serif;
-  padding: 30px;
-  position: relative;
+/* Reset & Base */
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
-.game-title {
-  font-size: 3rem;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 20px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+body, html, #root {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(135deg, #1f005c, #5b0060, #870160, #af2d1f);
+  overflow-x: hidden;
+  color: #f0f0f0;
 }
 
-.game-board {
-  display: grid;
-  grid-template-columns: repeat(3, 120px);
-  grid-template-rows: repeat(3, 120px);
-  gap: 10px;
-  justify-content: center;
-  margin: 20px;
-}
-
-.game-cell {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f9f9f9;
-  font-size: 3rem;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-}
-
-.game-cell:hover {
-  transform: scale(1.1);
-  background-color: #e6e6e6;
-}
-
-.winning-cell {
-  background-color: #ffcc00;
-  border: 3px solid #ff0000;
-  animation: explode 0.5s ease-out;
-}
-
-@keyframes explode {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.2);
-    opacity: 0;
-  }
-}
-
-.winner-message {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #ff0000;
-  margin-top: 20px;
-}
-
-.scoreboard {
-  margin-top: 20px;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.reset-button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.reset-button:hover {
-  background-color: #45a049;
-}
-
-/* Full-Screen Victory Animation */
-.victory-overlay {
+/* Background animated symbols */
+.background-animations {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 255, 0, 0.6); /* Green victory background */
-  z-index: 1000;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+  user-select: none;
+}
+
+.floating-symbol {
+  position: absolute;
+  font-size: 3rem;
+  opacity: 0.15;
+  animation-name: floatUpDown;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-duration: 7s;
+  color: #ffdd57;
+  text-shadow: 0 0 8px #ffd800, 0 0 20px #ffae00;
+}
+
+.floating-symbol.dog {
+  top: 70%;
+  left: 20%;
+  animation-delay: 0s;
+  color: #ffd600;
+  font-size: 3.8rem;
+}
+
+.floating-symbol.pizza {
+  top: 40%;
+  left: 80%;
+  animation-delay: 2s;
+  color: #ff6f61;
+  font-size: 3.6rem;
+}
+
+.floating-symbol.paw {
+  top: 10%;
+  left: 50%;
+  animation-delay: 1s;
+  color: #ffb347;
+  font-size: 3.7rem;
+}
+
+.floating-symbol.small {
+  font-size: 2rem;
+  opacity: 0.1;
+  animation-duration: 9s;
+}
+
+.floating-symbol.small.dog {
+  top: 20%;
+  left: 10%;
+  animation-delay: 3s;
+  color: #ffdd57;
+}
+
+.floating-symbol.small.pizza {
+  top: 60%;
+  left: 60%;
+  animation-delay: 5s;
+  color: #ff7761;
+}
+
+.floating-symbol.small.paw {
+  top: 80%;
+  left: 90%;
+  animation-delay: 4s;
+  color: #ffb347;
+}
+
+@keyframes floatUpDown {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.15;
+  }
+  50% {
+    transform: translateY(-30px) rotate(15deg);
+    opacity: 0.3;
+  }
+}
+
+/* Container for entire page */
+.game-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 10px 40px 10px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Heading */
+.game-title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 30px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-transform: uppercase;
+  user-select: none;
+  text-align: center;
+}
+
+/* Wrapper for board and scoreboard */
+.game-wrapper {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 35px;
+}
+
+/* Game board */
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 15px;
+  width: 100%;
+  background: rgba(255, 179, 71, 0.1);
+  padding: 15px;
+  border-radius: 18px;
+  box-shadow:
+    inset 0 0 15px #ffb34788,
+    0 0 20px #ffb347aa;
+  user-select: none;
+}
+
+.game-cell {
+  background: #2b2b3d;
+  border-radius: 12px;
+  height: 90px;
+  font-size: 3.8rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: victoryAnimation 3s ease-out;
+  color: #f0e8cf;
+  box-shadow:
+    0 4px 10px #0008 inset;
+  transition: background 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+  user-select: none;
 }
 
-.victory-message {
-  font-size: 3rem;
-  font-weight: bold;
-  color: white;
-  text-transform: uppercase;
-  animation: flash 1s infinite;
+.game-cell:hover {
+  background: #ffb347cc;
+  color: #2e1a00;
+  transform: scale(1.1);
+  box-shadow:
+    0 0 20px 3px #ffb347dd,
+    0 4px 15px #ffb347bb inset;
 }
 
-@keyframes victoryAnimation {
-  0% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(2);
-  }
+.winning-cell {
+  background: #ffb347;
+  color: #2e1a00;
+  box-shadow:
+    0 0 25px 5px #ffb347ff,
+    0 0 15px 3px #ff6f00bb inset;
+  transform: scale(1.2);
+  transition: all 0.4s ease;
+  cursor: default;
 }
 
-@keyframes flash {
-  0% {
-    color: #ff0000;
-  }
-  50% {
-    color: #ffff00;
-  }
-  100% {
-    color: #ff0000;
-  }
+/* Scoreboard block */
+.scoreboard-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
 }
 
-/* Confetti Effect */
-@keyframes confettiFall {
-  0% {
-    top: -100px;
-    left: 50%;
-    transform: rotate(0deg);
-  }
-  100% {
-    top: 100vh;
-    left: 50%;
-    transform: rotate(360deg);
-  }
+.scoreboard {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 179, 71, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 15px #ffb347aa,
+    0 0 10px #ffb34788;
+  user-select: none;
 }
 
-.confetti {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background-color: red;
-  animation: confettiFall 2s linear infinite;
+.scoreboard thead tr {
+  background: #ffb347cc;
+  color: #2e1a00;
+  font-weight: 700;
+  font-size: 1.1rem;
 }
 
-.confetti:nth-child(odd) {
-  background-color: blue;
+.scoreboard th,
+.scoreboard td {
+  padding: 10px 15px;
+  text-align: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.confetti:nth-child(even) {
-  background-color: green;
+.scoreboard th:last-child,
+.scoreboard td:last-child {
+  border-right: none;
 }
 
-.confetti:nth-child(3) {
-  animation-delay: 0.5s;
+.scoreboard tbody tr {
+  font-size: 1.15rem;
+  cursor: default;
+  transition: background 0.3s ease;
 }
 
-/* Responsive Design */
+.scoreboard tbody tr.player1 {
+  color: #ffd600;
+}
+
+.scoreboard tbody tr.player2 {
+  color: #ff6f61;
+}
+
+.scoreboard tbody tr:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+/* Buttons container */
+.buttons-container {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  width: 100%;
+}
+
+.reset-button,
+.restart-all-button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #222;
+  box-shadow:
+    0 4px 8px rgba(255, 179, 71, 0.7);
+  transition: all 0.3s ease;
+  background: #ffb347;
+}
+
+.reset-button:hover,
+.restart-all-button:hover {
+  background: #ffca65;
+  box-shadow:
+    0 6px 12px rgba(255, 179, 71, 0.9);
+  transform: scale(1.05);
+}
+
+/* Victory overlay */
+.victory-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffb347ee;
+  color: #2e1a00;
+  font-size: 2.8rem;
+  padding: 25px 40px;
+  border-radius: 30px;
+  box-shadow:
+    0 0 40px 12px #ffb347dd,
+    0 0 30px 10px #ff6f00cc inset;
+  z-index: 100;
+  user-select: none;
+  text-align: center;
+  font-weight: 700;
+}
+
+.victory-overlay.tie {
+  background: #5c5c5cdd;
+  color: #ffb347;
+  text-shadow:
+    0 0 10px #ffb347cc;
+}
+
+/* Responsive */
 @media (max-width: 600px) {
-  .game-board {
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: repeat(3, 100px);
+  .game-wrapper {
+    max-width: 95vw;
   }
 
   .game-cell {
-    font-size: 2rem;
-    width: 100px;
-    height: 100px;
+    height: 70px;
+    font-size: 2.8rem;
+  }
+
+  .scoreboard-wrapper {
+    gap: 15px;
+  }
+
+  .buttons-container {
+    flex-direction: column;
+  }
+
+  .reset-button,
+  .restart-all-button {
+    width: 100%;
+    margin-top: 10px;
   }
 }
