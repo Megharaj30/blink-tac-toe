@@ -5,7 +5,7 @@ Players take turns using adorable emojis (🐶 and 🍕) with real-time score tr
 
 ## 🎮 Live Demo
 
-👉 [Play Blink Tac Toe Now](https://blink-tac-toe.vercel.app)
+👉 [Play Blink Tac Toe Now](https://blink-tac-toe-virid.vercel.app/)
 
 ## 📸 Preview
 
