@@ -1,57 +1,13 @@
-/* src/App.css */
-.game-container {
-  text-align: center;
-  font-family: Arial, sans-serif;
-  padding: 20px;
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.game-board {
-  display: grid;
-  grid-template-columns: repeat(3, 100px);
-  grid-template-rows: repeat(3, 100px);
-  gap: 10px;
-  justify-content: center;
-}
-
-.game-cell {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f2f2f2;
-  font-size: 3rem;
-  border: 2px solid #ccc;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.game-cell:hover {
-  background-color: #ddd;
-}
-
-button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-/* Responsive Design */
-@media (max-width: 600px) {
-  .game-board {
-    grid-template-columns: repeat(3, 80px);
-    grid-template-rows: repeat(3, 80px);
-  }
-
-  .game-cell {
-    font-size: 2rem;
-    width: 80px;
-    height: 80px;
-  }
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
